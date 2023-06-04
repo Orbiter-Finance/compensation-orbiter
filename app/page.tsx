@@ -43,6 +43,7 @@ const formSchema = z.object({
       chainName: z.string().min(1, { message: "Please select chain." }),
     })
   ),
+  signature: z.string().optional(),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -102,9 +103,9 @@ export default function IndexPage() {
       message += data.txHashs
         .map((item, index) => `${index + 1}. ${item.hash} on ${item.chainName}`)
         .join("\n")
-      const signature = await walletClient?.signMessage({ message })
+      data.signature = await walletClient!.signMessage({ message })
 
-      const v = utils.verifyMessage(message, signature!)
+      const v = utils.verifyMessage(message, data.signature)
       if (v != data.victimAddress)
         throw new Error("Signer does not match victim address")
 
