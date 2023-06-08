@@ -2,14 +2,14 @@
 
 import { useEffect } from "react"
 import Link from "next/link"
+import axios from "@/node_modules/axios"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { utils } from "ethers"
 import { useFieldArray, useForm } from "react-hook-form"
 import { useAccount, useWalletClient } from "wagmi"
 import * as z from "zod"
-import { whiteList } from "@/config/whiteList"
-import axios from "@/node_modules/axios";
 
+import { whiteList } from "@/config/whiteList"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -147,7 +147,7 @@ export default function IndexPage() {
   }
 
   return (
-    <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10 flex justify-items-start">
+    <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       <div className="flex max-w-[980px] flex-col items-start gap-2">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
