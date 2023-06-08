@@ -92,19 +92,14 @@ export default function IndexPage() {
 
   async function onSubmit(data: FormValues) {
     try {
-      if (!new RegExp(/^0x[a-fA-F0-9]{40}$/).test(data.victimAddress)) {
-        throw new Error(
-          `Wrong victim address format`
-        );
-      }
       if (!new RegExp(/^0x[a-fA-F0-9]{40}$/).test(data.newAddress)) {
         throw new Error(
-          `Wrong new address format`
+          `Wrong zkSync Era address format`
         );
       }
       if (!whiteList.find(item => item.toLowerCase() === data.victimAddress.toLowerCase())) {
         throw new Error(
-          `${data.victimAddress} not victim address`
+          `Submit Failed: ${data.victimAddress} is not allowed for compensation.`
         );
       }
       if (data.victimAddress == data.newAddress)
@@ -160,15 +155,17 @@ export default function IndexPage() {
               control={form.control}
               name="victimAddress"
               render={({ field }) => (
-                <FormItem style={{width:700}}>
-                  <FormLabel>Victim Address</FormLabel>
+                <FormItem>
+                  <FormLabel style={{fontSize:30}}>Hacked Address</FormLabel>
                   <FormControl>
                     <Input placeholder="0x..." {...field} disabled />
                   </FormControl>
-                  {/*<FormDescription>*/}
-                  {/*  Form item introduction. Form item introduction. Form item*/}
-                  {/*  introduction. Form item introduction.*/}
-                  {/*</FormDescription>*/}
+                  <FormDescription>
+                    Please fill the address of the wallet from which your funds were stolen. If it is not correct, please switch to the account in your wallet.<br />
+
+                    The wallet address eligible for compensation is the wallet address from which funds were stolen via Orbiter Discord between 03:30:00 (UTC+0) and 21:30:00 (UTC+0) on June 1, 2023.<br />
+                    If your address is not within that time frame, it cannot be submitted.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -178,14 +175,13 @@ export default function IndexPage() {
               name="newAddress"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New Address</FormLabel>
+                  <FormLabel style={{fontSize:30}}>zkSync Era Address</FormLabel>
                   <FormControl>
                     <Input placeholder="0x..." {...field} />
                   </FormControl>
-                  {/*<FormDescription>*/}
-                  {/*  Form item introduction. Form item introduction. Form item*/}
-                  {/*  introduction. Form item introduction.*/}
-                  {/*</FormDescription>*/}
+                  <FormDescription>
+                    This is the zkSync Era address where you expect to receive the compensation.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -195,19 +191,35 @@ export default function IndexPage() {
               name="ticketId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ticket Id</FormLabel>
+                  <FormLabel style={{fontSize:30}}>Discord Ticket Number</FormLabel>
                   <FormControl>
                     <Input placeholder="0x..." {...field} />
                   </FormControl>
-                  {/*<FormDescription>*/}
-                  {/*  Form item introduction. Form item introduction. Form item*/}
-                  {/*  introduction. Form item introduction.*/}
-                  {/*</FormDescription>*/}
+                  <FormDescription>
+                    Please fill the ticket number of the compensation ticket you created on Orbiter Discord.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <Button type="submit">SignMessage & Submit</Button>
+            <div style={{fontWeight:1000}}>
+              <div style={{fontSize:25,fontWeight:1000}}>
+                Risk Warning:
+              </div>
+              Do not trust any information related to compensation received through channels other than the official platform, and refrain from believing messages sent via private messages.
+            </div>
+            <div>
+              <div style={{fontSize:25,fontWeight:1000}}>
+                Compensation Process:
+              </div>
+
+              1. Create a ticket on Discord and provide the relevant information as prompted.<br/>
+
+              2. Fill in the information on this website and submit it.<br/>
+
+              3. Once your submission is successful, please wait for the compensation outcome in your ticket.
+            </div>
           </form>
         </Form>
       </div>
