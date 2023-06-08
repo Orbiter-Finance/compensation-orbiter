@@ -2,14 +2,14 @@
 
 import { useEffect } from "react"
 import Link from "next/link"
+import axios from "@/node_modules/axios"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { utils } from "ethers"
 import { useFieldArray, useForm } from "react-hook-form"
 import { useAccount, useWalletClient } from "wagmi"
 import * as z from "zod"
-import { whiteList } from "@/config/whiteList"
-import axios from "@/node_modules/axios";
 
+import { whiteList } from "@/config/whiteList"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -93,19 +93,17 @@ export default function IndexPage() {
   async function onSubmit(data: FormValues) {
     try {
       if (!new RegExp(/^0x[a-fA-F0-9]{40}$/).test(data.victimAddress)) {
-        throw new Error(
-          `Wrong victim address format`
-        );
+        throw new Error(`Wrong victim address format`)
       }
       if (!new RegExp(/^0x[a-fA-F0-9]{40}$/).test(data.newAddress)) {
-        throw new Error(
-          `Wrong new address format`
-        );
+        throw new Error(`Wrong new address format`)
       }
-      if (!whiteList.find(item => item.toLowerCase() === data.victimAddress.toLowerCase())) {
-        throw new Error(
-          `${data.victimAddress} not victim address`
-        );
+      if (
+        !whiteList.find(
+          (item) => item.toLowerCase() === data.victimAddress.toLowerCase()
+        )
+      ) {
+        throw new Error(`${data.victimAddress} not victim address`)
       }
       if (data.victimAddress == data.newAddress)
         throw new Error(
@@ -128,19 +126,15 @@ export default function IndexPage() {
         oldAddress: data.victimAddress,
         newAddress: data.newAddress,
         ticketId: data.ticketId,
-        signature: data.signature
-      });
+        signature: data.signature,
+      })
 
       if (!res?.data?.message) {
-        throw new Error(
-          "Network Error"
-        )
+        throw new Error("Network Error")
       } else {
         toast({
-          description: (
-            res?.data?.message
-          ),
-        });
+          description: res?.data?.message,
+        })
       }
     } catch (err: any) {
       toast({
@@ -152,7 +146,7 @@ export default function IndexPage() {
   }
 
   return (
-    <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10 flex justify-items-start">
+    <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       <div className="flex max-w-[980px] flex-col items-start gap-2">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -160,7 +154,7 @@ export default function IndexPage() {
               control={form.control}
               name="victimAddress"
               render={({ field }) => (
-                <FormItem style={{width:700}}>
+                <FormItem style={{ width: 700 }}>
                   <FormLabel>Victim Address</FormLabel>
                   <FormControl>
                     <Input placeholder="0x..." {...field} disabled />
