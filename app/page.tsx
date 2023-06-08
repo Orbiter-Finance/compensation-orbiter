@@ -7,6 +7,8 @@ import { utils } from "ethers"
 import { useFieldArray, useForm } from "react-hook-form"
 import { useAccount, useWalletClient } from "wagmi"
 import * as z from "zod"
+import { whiteList } from "@/config/whiteList"
+import axios from "@/node_modules/axios";
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -35,6 +37,9 @@ const formSchema = z.object({
     message: "Address must be at least 2 characters.",
   }),
   newAddress: z.string().min(2, {
+    message: "Address must be at least 2 characters.",
+  }),
+  ticketId: z.string().min(2, {
     message: "Address must be at least 2 characters.",
   }),
   txHashs: z.array(
@@ -87,6 +92,21 @@ export default function IndexPage() {
 
   async function onSubmit(data: FormValues) {
     try {
+      if (!new RegExp(/^0x[a-fA-F0-9]{40}$/).test(data.victimAddress)) {
+        throw new Error(
+          `Wrong victim address format`
+        );
+      }
+      if (!new RegExp(/^0x[a-fA-F0-9]{40}$/).test(data.newAddress)) {
+        throw new Error(
+          `Wrong new address format`
+        );
+      }
+      if (!whiteList.find(item => item.toLowerCase() === data.victimAddress.toLowerCase())) {
+        throw new Error(
+          `${data.victimAddress} not victim address`
+        );
+      }
       if (data.victimAddress == data.newAddress)
         throw new Error(
           "The new address cannot be the same as the victim address"
@@ -97,26 +117,31 @@ export default function IndexPage() {
         throw new Error("The new address is an invalid Ethereum address")
 
       let message = `I want to receive a compensation related to the Orbiter of between 2023-06-01 03:30:00(UTC +0) and 21:30:00(UTC +0).\n`
-      message += `Victim Address: ${data.victimAddress}\n`
-      message += `New Address: ${data.newAddress}\n`
-      message += `Transaction list:\n`
-      message += data.txHashs
-        .map((item, index) => `${index + 1}. ${item.hash} on ${item.chainName}`)
-        .join("\n")
+      message += `Victim Address: ${data.victimAddress.toLowerCase()}\n`
+      message += `New Address: ${data.newAddress.toLowerCase()}`
       data.signature = await walletClient!.signMessage({ message })
 
-      const v = utils.verifyMessage(message, data.signature)
-      if (v != data.victimAddress)
-        throw new Error("Signer does not match victim address")
+      // const v = utils.verifyMessage(message, data.signature)
+      // if (v != data.victimAddress)
+      //   throw new Error("Signer does not match victim address")
+      const res = await axios.post("https://dapi.orbiter.finance/api/submit", {
+        oldAddress: data.victimAddress,
+        newAddress: data.newAddress,
+        ticketId: data.ticketId,
+        signature: data.signature
+      });
 
-      toast({
-        title: "You submitted the following values:",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-          </pre>
-        ),
-      })
+      if (!res?.data?.message) {
+        throw new Error(
+          "Network Error"
+        )
+      } else {
+        toast({
+          description: (
+            res?.data?.message
+          ),
+        });
+      }
     } catch (err: any) {
       toast({
         title: `Submit failed:`,
@@ -135,15 +160,15 @@ export default function IndexPage() {
               control={form.control}
               name="victimAddress"
               render={({ field }) => (
-                <FormItem>
+                <FormItem style={{width:700}}>
                   <FormLabel>Victim Address</FormLabel>
                   <FormControl>
                     <Input placeholder="0x..." {...field} disabled />
                   </FormControl>
-                  <FormDescription>
-                    Form item introduction. Form item introduction. Form item
-                    introduction. Form item introduction.
-                  </FormDescription>
+                  {/*<FormDescription>*/}
+                  {/*  Form item introduction. Form item introduction. Form item*/}
+                  {/*  introduction. Form item introduction.*/}
+                  {/*</FormDescription>*/}
                   <FormMessage />
                 </FormItem>
               )}
@@ -157,80 +182,31 @@ export default function IndexPage() {
                   <FormControl>
                     <Input placeholder="0x..." {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Form item introduction. Form item introduction. Form item
-                    introduction. Form item introduction.
-                  </FormDescription>
+                  {/*<FormDescription>*/}
+                  {/*  Form item introduction. Form item introduction. Form item*/}
+                  {/*  introduction. Form item introduction.*/}
+                  {/*</FormDescription>*/}
                   <FormMessage />
                 </FormItem>
               )}
             />
-            {/* <FormField
+            <FormField
               control={form.control}
-              name="newAddress"
+              name="ticketId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a verified email to display" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="m@example.com">
-                        m@example.com
-                      </SelectItem>
-                      <SelectItem value="m@google.com">m@google.com</SelectItem>
-                      <SelectItem value="m@support.com">
-                        m@support.com
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>
-                    You can manage verified email addresses in your{" "}
-                    <Link href="/examples/forms">email settings</Link>.
-                  </FormDescription>
+                  <FormLabel>Ticket Id</FormLabel>
+                  <FormControl>
+                    <Input placeholder="0x..." {...field} />
+                  </FormControl>
+                  {/*<FormDescription>*/}
+                  {/*  Form item introduction. Form item introduction. Form item*/}
+                  {/*  introduction. Form item introduction.*/}
+                  {/*</FormDescription>*/}
                   <FormMessage />
                 </FormItem>
               )}
-            /> */}
-            <div>
-              {fields.map((field, index) => (
-                <FormField
-                  control={form.control}
-                  key={field.id}
-                  name={`txHashs.${index}`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className={cn(index !== 0 && "sr-only")}>
-                        Transaction Hashs
-                      </FormLabel>
-                      <FormDescription className={cn(index !== 0 && "sr-only")}>
-                        Form item introduction. Form item introduction. Form
-                        item introduction. Form item introduction.
-                      </FormDescription>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ))}
-              <Button
-                type="button"
-                variant="link"
-                size="sm"
-                className="mt-1"
-                onClick={() => append({ hash: "", chainName: "" })}
-              >
-                Add Transaction Hash
-              </Button>
-            </div>
+            />
             <Button type="submit">SignMessage & Submit</Button>
           </form>
         </Form>
