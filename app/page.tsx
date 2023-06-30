@@ -146,6 +146,10 @@ export default function IndexPage() {
     }
   }
 
+  function clickTwitter() {
+    window.open('https://twitter.com/Orbiter_Finance');
+  }
+
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       <div className="flex max-w-[980px] flex-col items-start gap-2">
@@ -157,13 +161,13 @@ export default function IndexPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel style={{fontSize:30}}>Hacked Address</FormLabel>
-                  <FormControl>
+                  <FormControl style={{fontSize:18,fontWeight:500}}>
                     <Input placeholder="0x..." {...field} disabled />
                   </FormControl>
-                  <FormDescription>
-                    Please fill the address of the wallet from which your funds were stolen. If it is not correct, please switch to the account in your wallet.<br />
+                  <FormDescription style={{fontSize:18}}>
+                    Please fill the address of the wallet from which your funds were stolen. If it is not correct, please switch to the account in your wallet.<br /><br />
 
-                    The wallet address eligible for compensation is the wallet address from which funds were stolen via Orbiter Discord between 03:30:00 (UTC+0) and 21:30:00 (UTC+0) on June 1, 2023.<br />
+                    The wallet address eligible for compensation is the wallet address from which funds were stolen via Orbiter Discord between 03:30:00 (UTC+0) and 21:30:00 (UTC+0) on June 1, 2023.<br /><br />
                     If your address is not within that time frame, it cannot be submitted.
                   </FormDescription>
                   <FormMessage />
@@ -176,10 +180,10 @@ export default function IndexPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel style={{fontSize:30}}>zkSync Era Address</FormLabel>
-                  <FormControl>
+                  <FormControl style={{fontSize:18,fontWeight:500}}>
                     <Input placeholder="0x..." {...field} />
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription style={{fontSize:18}}>
                     This is the zkSync Era address where you expect to receive the compensation.
                   </FormDescription>
                   <FormMessage />
@@ -192,10 +196,10 @@ export default function IndexPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel style={{fontSize:30}}>Discord Ticket Number</FormLabel>
-                  <FormControl>
+                  <FormControl style={{fontSize:18,fontWeight:500}}>
                     <Input placeholder="0x..." {...field} />
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription style={{fontSize:18}}>
                     Please fill the ticket number of the compensation ticket you created on Orbiter Discord.
                   </FormDescription>
                   <FormMessage />
@@ -203,14 +207,25 @@ export default function IndexPage() {
               )}
             />
             <Button type="submit">SignMessage & Submit</Button>
-            <div style={{fontWeight:1000}}>
-              <div style={{fontSize:25,fontWeight:1000}}>
-                Risk Warning:
+            <div style={{fontWeight:1000,fontSize:18}}>
+              <div style={{fontSize:25,fontWeight:1000,color:"red"}}>
+                ⚠️ Risk Warning:
               </div>
-              Do not trust any information related to compensation received through channels other than the official platform, and refrain from believing messages sent via private messages.
+              <div>
+                - Only <span onClick={clickTwitter} style={{cursor:"pointer",color:"#1D99EC"}}>@Orbiter_Finance</span> with the golden checkmark is the official Twitter account.
+              </div>
+              <div>
+                - Only follow the links indicated by the official account for compensation!
+              </div>
+              <div>
+                - Please carefully inspect and compare the compensation link (beware of similar fake links), and don't trust links from sources other than the official platform!
+              </div>
+              <div>
+                - We never send you DMs,  please also don't believe any information sent through private messages.
+              </div>
             </div>
             <div>
-              <div style={{fontSize:25,fontWeight:1000}}>
+              <div style={{fontSize:25}}>
                 Compensation Process:
               </div>
 
