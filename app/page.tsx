@@ -218,10 +218,10 @@ export default function IndexPage() {
                 - Only follow the links indicated by the official account for compensation!
               </div>
               <div>
-                - Please carefully inspect and compare the compensation link (beware of similar fake links), and don't trust links from sources other than the official platform!
+                - Please carefully inspect and compare the compensation link (beware of similar fake links), and don&apos;t trust links from sources other than the official platform!
               </div>
               <div>
-                - We never send you DMs,  please also don't believe any information sent through private messages.
+                - We never send you DMs,  please also don&apos;t believe any information sent through private messages.
               </div>
             </div>
             <div>
