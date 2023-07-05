@@ -135,6 +135,7 @@ export default function IndexPage() {
           description: (
             res?.data?.message
           ),
+          variant: "primary"
         });
       }
     } catch (err: any) {
@@ -185,6 +186,7 @@ export default function IndexPage() {
                   </FormControl>
                   <FormDescription style={{fontSize:18}}>
                     This is the zkSync Era address where you expect to receive the compensation.
+                    <span style={{fontWeight:800}}>Please note: This address cannot be the same as the hacked address, please provide a new address on zkSync Era.</span>
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
