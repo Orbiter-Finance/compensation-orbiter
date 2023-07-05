@@ -135,7 +135,7 @@ export default function IndexPage() {
           description: (
             res?.data?.message
           ),
-          variant: "primary"
+          style: {background:"#06DD6C",color:"#ffffff"}
         });
       }
     } catch (err: any) {
